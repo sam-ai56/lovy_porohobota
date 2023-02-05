@@ -1,5 +1,6 @@
 .env
 package-lock.json
+package.json
 sqlite.db
 count.json
 node_modules/
