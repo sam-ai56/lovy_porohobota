@@ -40,8 +40,8 @@ bot.on('message', (msg) => {
     word_list.forEach(element => {
         if (message_text.includes(element.name)) {
             bot.deleteMessage(msg.chat.id, msg.message_id);
-            bot.sendMessage(msg.chat.id, `Діма сказав "${element.name}".`).then(() => {
-                bot.sendMessage(msg.chat.id, `Пішов нахуй.`);
+            bot.sendMessage(msg.chat.id, `Діма сказав "${element.name}".`, { reply_to_message_id: msg.message_id }).then(() => {
+                bot.sendMessage(msg.chat.id, `Пішов нахуй.`, { reply_to_message_id: msg.message_id });
             });
             counter++;
             fs.writeFileSync('count.json', JSON.stringify({ count: counter }));
@@ -50,11 +50,11 @@ bot.on('message', (msg) => {
     });
     // ......
 });
-
+28
 bot.onText(/\/poroholichilnyk/, (msg) => {
     if (msg.chat.type == 'private')
         return;
-    bot.sendMessage(msg.chat.id, `Діма сказав щось про порошенко: ${counter} раз(ів).`);
+    bot.sendMessage(msg.chat.id, `Діма сказав щось про порошенко: ${counter} раз(ів).`, { reply_to_message_id: msg.message_id });
 });
 
 bot.onText(/\/sareestruvaty_slovo/, (msg) => {
@@ -62,14 +62,14 @@ bot.onText(/\/sareestruvaty_slovo/, (msg) => {
         return;
 
     if (msg.from.id == env.TARGET_ID) 
-        bot.sendMessage(msg.chat.id, `Діма немає сечі терпіти ці пекельні борошна.`);
+        bot.sendMessage(msg.chat.id, `Діма немає сечі терпіти ці пекельні борошна.`, { reply_to_message_id: msg.message_id });
 
     var word_list = db.prepare('SELECT * FROM word_list').all();
     var alredy_reg = false;
     word_list.forEach(element => {
         if (element.name == msg.text.split(' ')[1]) {
             alredy_reg = true;
-            bot.sendMessage(msg.chat.id, `Слово ${msg.text.split(' ')[1]} вже зареєстровано.`);
+            bot.sendMessage(msg.chat.id, `Слово ${msg.text.split(' ')[1]} вже зареєстровано.`, { reply_to_message_id: msg.message_id });
             return;
         }
     });
@@ -77,7 +77,7 @@ bot.onText(/\/sareestruvaty_slovo/, (msg) => {
     if (!alredy_reg){
         db.prepare('INSERT INTO word_list (name) VALUES (?)').run(msg.text.split(' ')[1]);
 
-        bot.sendMessage(msg.chat.id, `Слово ${msg.text.split(' ')[1]} зареєстровано.`);
+        bot.sendMessage(msg.chat.id, `Слово ${msg.text.split(' ')[1]} зареєстровано.`, { reply_to_message_id: msg.message_id });
     }
 });
 
@@ -85,8 +85,14 @@ bot.onText(/\/vydality_slovo/, (msg) => {
     if (msg.chat.type == 'private')
         return;
 
-    if (msg.from.id == env.TARGET_ID) 
-        bot.sendMessage(msg.chat.id, `Діма немає сечі терпіти ці пекельні борошна.`);
+    if (msg.from.id == env.TARGET_ID){
+        bot.sendMessage(msg.chat.id, `Діма немає сечі терпіти ці пекельні борошна.`, { reply_to_message_id: msg.message_id });
+        return;
+    }
+    
+    if (typeof(msg.text.split(' ')[1]) == 'undefined'){
+        bot.sendMessage(msg.chat.id, `Ви не вказали слово`, { reply_to_message_id: msg.message_id });
+    }
 
     var word_list = db.prepare('SELECT * FROM word_list').all();
     var is_word = false;
@@ -94,11 +100,11 @@ bot.onText(/\/vydality_slovo/, (msg) => {
         if (element.name == msg.text.split(' ')[1]) {
             is_word = true;
             db.prepare('DELETE FROM word_list WHERE name = ?').run(msg.text.split(' ')[1]);
-            bot.sendMessage(msg.chat.id, `Слово ${msg.text.split(' ')[1]} видалено.`);
+            bot.sendMessage(msg.chat.id, `Слово ${msg.text.split(' ')[1]} видалено.`, { reply_to_message_id: msg.message_id });
         }
     });
     if (!is_word)
-        bot.sendMessage(msg.chat.id, `Слово ${msg.text.split(' ')[1]} не зареєстровано.`);
+        bot.sendMessage(msg.chat.id, `Слово ${msg.text.split(' ')[1]} не зареєстровано.`, { reply_to_message_id: msg.message_id });
 });
 
 bot.onText(/\/slova_u_filtri/, (msg) => {
@@ -106,14 +112,12 @@ bot.onText(/\/slova_u_filtri/, (msg) => {
         return;
 
     if (msg.from.id == env.TARGET_ID) 
-        bot.sendMessage(msg.chat.id, `Діма немає сечі терпіти ці пекельні борошна.`);
+        bot.sendMessage(msg.chat.id, `Діма немає сечі терпіти ці пекельні борошна.`, { reply_to_message_id: msg.message_id });
 
     var word_list = db.prepare('SELECT * FROM word_list').all();
-    var message = "";
+    var message = "Зареєстровані слова:\n";
     word_list.forEach(element => {
-        message += `${element.name}\n`;
+        message += `\t\t\t\t${element.name}\n`;
     });
-    bot.sendMessage(msg.chat.id, "Зареєстровані слова").then(() => {
-        bot.sendMessage(msg.chat.id, message);
-    });
+    bot.sendMessage(msg.chat.id, message, { reply_to_message_id: msg.message_id });
 });
