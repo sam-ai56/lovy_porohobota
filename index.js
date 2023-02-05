@@ -50,8 +50,8 @@ bot.on('message', (msg) => {
     word_list.forEach(element => {
         if (message_text.includes(element.name)) {
             bot.deleteMessage(msg.chat.id, msg.message_id);
-            bot.sendMessage(msg.chat.id, `Діма сказав "${element.name}".`, { reply_to_message_id: msg.message_id }).then(() => {
-                bot.sendMessage(msg.chat.id, `Пішов нахуй.`, { reply_to_message_id: msg.message_id });
+            bot.sendMessage(msg.chat.id, `Діма сказав "${element.name}".`).then(() => {
+                bot.sendMessage(msg.chat.id, `Пішов нахуй.`);
             });
             counter++;
             fs.writeFileSync('count.json', JSON.stringify({ count: counter }));
