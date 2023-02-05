@@ -24,7 +24,7 @@ try {
 
 
 bot.on('message', (msg) => {
-    if (msg.chat.type == 'private')
+    if (msg.chat.id != env.GENERAL_CHAT_ID)
         return;
     
     const message_text = msg.text.toLowerCase();
@@ -62,13 +62,13 @@ bot.on('message', (msg) => {
 });
 28
 bot.onText(/\/poroholichilnyk/, (msg) => {
-    if (msg.chat.type == 'private')
+    if (msg.chat.id != env.GENERAL_CHAT_ID)
         return;
     bot.sendMessage(msg.chat.id, `Діма сказав щось про порошенко: ${counter} раз(ів).`, { reply_to_message_id: msg.message_id });
 });
 
 bot.onText(/\/sareestruvaty_slovo/, (msg) => {
-    if (msg.chat.type == 'private')
+    if (msg.chat.id != env.GENERAL_CHAT_ID)
         return;
 
     if (msg.from.id == env.TARGET_ID) 
@@ -92,7 +92,7 @@ bot.onText(/\/sareestruvaty_slovo/, (msg) => {
 });
 
 bot.onText(/\/vydality_slovo/, (msg) => {
-    if (msg.chat.type == 'private')
+    if (msg.chat.id != env.GENERAL_CHAT_ID)
         return;
 
     if (msg.from.id == env.TARGET_ID){
@@ -118,7 +118,7 @@ bot.onText(/\/vydality_slovo/, (msg) => {
 });
 
 bot.onText(/\/slova_u_filtri/, (msg) => {
-    if (msg.chat.type == 'private')
+    if (msg.chat.id != env.GENERAL_CHAT_ID)
         return;
 
     if (msg.from.id == env.TARGET_ID) 
