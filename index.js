@@ -24,6 +24,8 @@ try {
 
 
 bot.on('message', (msg) => {
+    if (msg.chat.type != 'private')
+        return;
     console.log(msg.from.id);
     const message_text = msg.text.toLowerCase();
 
@@ -50,10 +52,15 @@ bot.on('message', (msg) => {
 });
 
 bot.onText(/\/poroholichilnyk/, (msg) => {
+    if (msg.chat.type != 'private')
+        return;
     bot.sendMessage(msg.chat.id, `Діма сказав щось про порошенко: ${counter} раз(ів).`);
 });
 
 bot.onText(/\/sareestruvaty_slovo/, (msg) => {
+    if (msg.chat.type != 'private')
+        return;
+
     if (msg.from.id == env.TARGET_ID) 
         bot.sendMessage(msg.chat.id, `Діма немає сечі терпіти ці пекельні борошна.`);
 
@@ -75,6 +82,9 @@ bot.onText(/\/sareestruvaty_slovo/, (msg) => {
 });
 
 bot.onText(/\/vydality_slovo/, (msg) => {
+    if (msg.chat.type != 'private')
+        return;
+
     if (msg.from.id == env.TARGET_ID) 
         bot.sendMessage(msg.chat.id, `Діма немає сечі терпіти ці пекельні борошна.`);
 
@@ -92,6 +102,9 @@ bot.onText(/\/vydality_slovo/, (msg) => {
 });
 
 bot.onText(/\/slova_u_filtri/, (msg) => {
+    if (msg.chat.type != 'private')
+        return;
+
     if (msg.from.id == env.TARGET_ID) 
         bot.sendMessage(msg.chat.id, `Діма немає сечі терпіти ці пекельні борошна.`);
 
