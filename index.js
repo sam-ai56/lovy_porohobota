@@ -26,11 +26,21 @@ try {
 bot.on('message', (msg) => {
     if (msg.chat.type == 'private')
         return;
-    console.log(msg.from.id);
+    
     const message_text = msg.text.toLowerCase();
 
     if (msg.from.id != env.TARGET_ID)
         return;
+
+    if (msg.document && msg.document.mime_type === 'video/mp4')
+        bot.getChat(env.GIF_CHAT_ID).then((chat) => {
+            bot.forwardMessage(chat.id, msg.chat.id, msg.message_id).then(() => {
+                bot.deleteMessage(msg.chat.id, msg.message_id).then(() => {
+                    bot.sendMessage(msg.chat.id, `ЦЕ СПОЙЛЕР\nДІМА КИНУВ ГІФКУ\n${chat.invite_link}`);
+                });
+            });
+        });
+
 
     // Перевірка чи є в базі даних слово, яке було сказано
     // Як що є тоді видалити повідомлення і відправити повідомлення
