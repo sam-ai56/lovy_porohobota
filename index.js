@@ -2,8 +2,8 @@ const TelegramBot = require('node-telegram-bot-api');
 const db = require('better-sqlite3')('sqlite.db');
 const fs = require('fs');
 require('dotenv').config();
-// var dgram = require('dgram');
-// var server = dgram.createSocket('udp4');
+var dgram = require('dgram');
+var server = dgram.createSocket('udp4');
 const env = process.env;
 
 var counter = 0;
@@ -22,14 +22,18 @@ try {
 } catch (err) {
     console.error("Error reading count.json");
 }
-
-
-// server.on('message', function (message, remote) {
-//     bot.sendMessage(env.GENERAL_CHAT_ID, "хтось відіслав стікер у зфккт бота");
-//     bot.sendSticker(env.GENERAL_CHAT_ID, message.toString('utf8'));
-// });
   
-// server.bind(7894);
+
+
+server.on('message', function (message, remote) {
+    bot.sendSticker(env.GENERAL_CHAT_ID, message.toString('utf8')).then((message) => {
+        bot.sendMessage(env.GENERAL_CHAT_ID, "Хтось відіслав стікер у ЗФККТ бота!", {
+            reply_to_message_id: message.message_id
+        });
+    });
+});
+  
+server.bind(7894);
 
 bot.on('message', (msg) => {
     if (msg.chat.id != env.GENERAL_CHAT_ID)
